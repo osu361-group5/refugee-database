@@ -1,0 +1,9 @@
+# node ignores
+node_modules
+
+# intellij ignores
+.idea
+
+
+# osx ignores
+.DS_Store
