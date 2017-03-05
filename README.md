@@ -8,4 +8,4 @@ npm install && npm start
 ```
 
 ## Live Link
-link: (hosted on heroku)[https://lit-tundra-42207.herokuapp.com/]
+link: [hosted on heroku](https://lit-tundra-42207.herokuapp.com/)
