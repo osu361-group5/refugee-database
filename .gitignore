@@ -1,9 +1,17 @@
 # node ignores
 node_modules
+npm-debug.log
 
 # intellij ignores
 .idea
 
+#Local dev
+*.env
+*.dev
+
+#Docker
+Dockerfile
+docker-compose.yml
 
 # osx ignores
 .DS_Store
