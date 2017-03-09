@@ -1,0 +1,26 @@
+<h1>User Registration</h1>
+
+<form action="/register" method="post">
+    <fieldset>
+		<legend>Create a new user</legend>
+		<div class = "field">User Type
+			<select name="refugeeType">
+				<option value="refugee">Refugee</option>
+				<option value="ngo">NGO</option>
+			</select>
+		</div>
+		<div>
+		  <label for='username'>Full Name:</label>
+		  <input type="text" name="username">
+		</div>
+		<div>
+		  <label for='email'>Email Address:</label>
+		  <input type="text" name="email">
+		</div>
+		<div>
+		  <label for='password'>Password:</label>
+		  <input type="password" name="password">
+		</div>
+		<input type="submit" value="Submit">
+    </fieldset>	
+</form>
