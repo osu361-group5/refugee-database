@@ -1,0 +1,17 @@
+# contains instructions to run the app locally
+version: "2"
+services:
+  db:
+    image: postgres
+  app:
+    build: .
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"
+    links:
+      - db
+    entrypoint:
+      - "npm"
+      - "start"
+

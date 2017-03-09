@@ -9,9 +9,5 @@ npm-debug.log
 *.env
 *.dev
 
-#Docker
-Dockerfile
-docker-compose.yml
-
 # osx ignores
 .DS_Store

@@ -24,6 +24,10 @@ All files ending in `spec.js` will be picked up by the testing harness.
 
 running tests: from root of project, do `npm test`
 
+## Using Docker
+If you have Docker & docker-compose installed, running the app is 
+as simple as `docker-compose up`.  Currently, the app will be available
+on your docker hosts port 3000.
 
 
 ## Live Link
