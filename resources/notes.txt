@@ -1,0 +1,35 @@
+routes
+
+need to do crud ops for user
+
+=======
+login
+POST /auth/login --> (dashboard)
+
+
+=======
+registration [register.hbs]
+GET /register --> (form)
+POST /register --> session --> (dashboard)
+
+======
+create reports [create_report.hbs]
+GET /report/create --> (form)
+POST /report/create --> creates form --> (dashboard)
+
+====
+get reports [report.hbs]
+GET /reports/:id
+
+====
+add associated member [add_family.hbs]
+GET /associated_person/create --> (form)
+POST /associated_person/create --> creates associated person --> (dashboard)
+
+====
+show associated member [members.hbs]
+GET /members --> (list of members)
+
+
+
+<a href="/reports/{{id}}">
