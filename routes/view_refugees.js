@@ -16,4 +16,9 @@ router.get('/', function(req, res) {
 		});
 });
 
+router.get('/', function(req, res, next) {
+	res.render('view_refugees', { title: 'NGO: Associated Refugees ' });
+});
+
+
 module.exports = router;
