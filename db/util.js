@@ -1,4 +1,4 @@
-const db = require('./db');
+const importedDb = require('./db');
 const fs = require('fs');
 const path = require('path');
 
@@ -7,7 +7,9 @@ var tableRe = new RegExp("^[A-Z]+ [^;]+;$", 'gm');
 /** chainable logging */
 function logPromise(...args) {
     return new Promise((resolve, reject) => {
-        console.log.apply(null, args);
+        if (process.env.DEBUG == 1) {
+            console.log.apply(null, args);
+        }
         resolve();
     });
 }
@@ -17,27 +19,34 @@ function logPromise(...args) {
  *
  * path for sqlFile should be relative to root of project
  */
-function readAllSqlFromFile(sqlFile='./db/schema.sql') {
-    console.log('opening sql file: ' + sqlFile);
-    fs.readFile(sqlFile, 'utf8', (err, data) => {
-        if (err) {
-            throw new Error('unable to open file');
-        }
-        data.match(tableRe)
-            .reduce((acc, statement) =>{
-                return acc
-                    .then(()=> db.none(statement))
-                    .then(()=> logPromise(`EXECUTED: ${statement}`))
-            }, Promise.resolve([]))
-    })
+function readAllSqlFromFile(sqlFile='./db/schema.sql', db=importedDb) {
+    return new Promise((resolve, reject) => {
+        fs.readFile(sqlFile, 'utf8', (err, data) => {
+            if (err) {
+                throw new Error('unable to open file');
+            }
+            data.match(tableRe)
+                .reduce((acc, statement) => {
+                    return acc
+                        .then(()=> db.none(statement))
+                        .then(()=> logPromise(`EXECUTED: ${statement}`))
+                }, Promise.resolve([]))
+                .then(()=> {
+                    // return the database used for creation to caller
+                    resolve(db);
+                })
+                .catch((err)=> reject(err));
+        });
+    });
 }
 
 /** this branch executes if you run the from the command line */
 if (require.main === module) {
-    readAllSqlFromFile('db/schema.sql');
+    readAllSqlFromFile('db/schema.sql')
+        .then(()=> console.log("created database"));
 }
 
 
-module.exports = function (sqlFile) {
-    readAllSqlFromFile(sqlFile);
+module.exports = function (sqlFile, db=db) {
+    return readAllSqlFromFile(sqlFile, db);
 };

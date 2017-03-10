@@ -1,6 +1,20 @@
-/** queries */
-
-const db = require('../db');
+/** queries
+ *
+ *  Here we use the Database Access Object pattern, because, plain sql is hard to maintain
+ *
+ *  To use this. In any place that you need a DAO do the following
+ *
+ *  // get the db instance
+ *  var db = require('db')
+ *
+ *  // explicitly set the database instance
+ *  // this is useful for testing situations where
+ *  // a test database should be used
+ *  var users = require('queries')(db).users
+ *
+ *  // then you can do this
+ *  users.findById(12).then((data)=> res.render('stuff', context=data));
+ */
 
 const today = new Date();
 
@@ -39,8 +53,16 @@ const associatedMembers = [
  */
 class UserDAO {
 
+    constructor(db) {
+        this.db = db;
+    }
+
     findById(id) {
-        return testUser;
+        return new Promise((resolve, reject) => {
+            this.db.one("SELECT * FROM user_m WHERE id = $1", [id])
+                .then((data) => resolve(data))
+                .catch((err) => reject(err));
+        });
     }
 
     findUserByUsername(username) {
@@ -49,7 +71,7 @@ class UserDAO {
 
     getAllUsers() {
         return new Promise((resolve, reject) => {
-            db.manyOrNone("SELECT * FROM user_m")
+            this.db.manyOrNone("SELECT * FROM user_m")
                 .then((data) => resolve(data))
                 .catch((err) => reject(data))
 
@@ -58,41 +80,78 @@ class UserDAO {
 
     createUser(username, password, email) {
         return new Promise((resolve, reject) => {
-            db.one("INSERT INTO user_m (username, password, email) VALUES ($1, $2)", [username, password, email])
-              .then((data) => resolve(data.id))
+            return this.db.one("INSERT INTO user_m (username, password_hash, email) VALUES ($1, $2, $3) returning id", [username, password, email])
+              .then((id) => resolve(id))
               .catch((err) => reject(err))
         });
     }
 }
 
 class RefugeeDAO {
+
+    constructor(db) {
+        this.db = db;
+    }
+
+    /**
+     * given an id, polls the database for the row corresponding to that id
+     * @param id
+     * @returns {Promise} that resolves to a row instance
+     */
     findById(id) {
         return testRefugee;
     }
 
+    /**
+     * gets the refugee instance associated with a particular userId
+     * @param userId
+     * @returns {Promise} that resolves to a row instance
+     */
     findByUserId(userId) {
         return testRefugee;
     }
 
-    createRefugee(userId, name) {
+    /**
+     *
+     * @param userId
+     * @param name
+     * @returns {Promise}
+     */
+    create(userId, name) {
         return new Promise((resolve, reject) => {
-            db.one("INSERT INTO refugee (user_id, name) VALUES ($1, $2)", [userId, name])
-                .then((data)=> resolve(date.id))
+            this.db.one("INSERT INTO refugee (user_id, name) VALUES ($1, $2) returning id", [userId, name])
+                .then((data)=> resolve(data))
                 .catch((err)=> reject(err))
         });
     }
 
+    /**
+     * gets all the refugees from database
+     * @returns {Promise}
+     */
     getAllRefugees() {
         return [testRefugee];
     }
 
+    /**
+     * gets all associated members for a particular refugee
+     * @param id
+     * @returns {Promise}
+     */
     getAssociatedMembers(id) {
         return associatedMembers;
     }
 }
 
 
-module.exports = {
-    users: new UserDAO(),
-    refugees: new RefugeeDAO()
+module.exports = function(db) {
+    // if a db has an attr 'query' assume its a db object
+    if (!db.query) {
+        throw new Error("DAO\'s need a database connection object");
+    }
+
+    return {
+        users: new UserDAO(db),
+        refugees: new RefugeeDAO(db)
+    }
 };

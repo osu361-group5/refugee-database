@@ -59,5 +59,5 @@ CREATE TABLE IF NOT EXISTS report (
     latitude FLOAT NOT NULL,
     description TEXT,
     creation_date DATE NOT NULL DEFAULT CURRENT_DATE,
-    edit_edit DATE
+    edit_date DATE
 );
