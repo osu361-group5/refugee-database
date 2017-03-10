@@ -11,6 +11,13 @@ services:
       - "3000:3000"
     links:
       - db
+    volumes:
+      # mounting each volume separately so as not to mask the fs in container
+      - "./views:/usr/src/app/views"
+      - "./db:/usr/src/app/db"
+      - "./public:/usr/src/app/public"
+      - "./app.js:/usr/src/app/app.js"
+      - "./routes:/usr/src/app/routes"
     entrypoint:
       - "npm"
       - "start"
