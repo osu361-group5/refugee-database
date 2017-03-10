@@ -17,6 +17,7 @@ var users = require('./routes/users');
 //var auth = require('./routes/auth');
 var debugging = require('./routes/debugging');
 var view_refugees = require('./routes/view_refugees');
+var ngo_options = require('./routes/ngo_options');
 
 var app = express();
 
@@ -38,6 +39,7 @@ app.use('/users', users);
 //app.use('/auth', auth);
 app.use('/debugging', debugging);
 app.use('/view_refugees', view_refugees);
+app.use('/ngo_options', ngo_options);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
