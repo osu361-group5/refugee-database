@@ -42,9 +42,6 @@ app.use('/', index);
 app.use('/users', users);
 app.use('/auth', auth);
 app.use('/debugging', debugging);
-app.use('/view_refugees', view_refugees);
-app.use('/search_refugees', search_refugees);
-app.use('/ngo_options', ngo_options);
 
 
 // catch 404 and forward to error handler
