@@ -145,6 +145,22 @@ class RefugeeDAO {
     getAssociatedMembers(id) {
         return associatedMembers;
     }
+
+    getRefugeesByAssociatedwithNGO(ngo_name) {
+        return new Promis((resolve, reject) => {
+            db.manyOrNone("SELECT u2.username, rep.creation_date, rep.description, rep.location_name FROM user_m AS u INNER JOIN ngo AS ngo ON ngo.user_id = u.id INNER JOIN refugee_ngo AS refno ON refno.ngo_id = ngo.id INNER JOIN refugee AS ref ON ref.id = refno.refugee_id INNER JOIN report AS rep ON rep.refugee_id = ref.id INNER JOIN user_m AS u2 ON u2.id = ref.user_id WHERE u.username = $1", [ngo_name])
+            .then((data)=> resolve(date.id))
+            .catch((err)=> reject(err))
+        });
+    }
+
+    findRefugeeAssociateWithNGOByName(ngo_name, refugee_name) {
+        return new Promis((resolve, reject) => {
+            db.manyOrNone("SELECT u2.username, rep.creation_date, rep.description, rep.location_name FROM user_m AS u INNER JOIN ngo AS ngo ON ngo.user_id = u.id INNER JOIN refugee_ngo AS refno ON refno.ngo_id = ngo.id INNER JOIN refugee AS ref ON ref.id = refno.refugee_id INNER JOIN report AS rep ON rep.refugee_id = ref.id INNER JOIN user_m AS u2 ON u2.id = ref.user_id WHERE u.username = $1 AND u2.username = $2", [ngo_name, refugee_name])
+            .then((data)=> resolve(date.id))
+            .catch((err)=> reject(err))
+        });
+    }
 }
 
 
