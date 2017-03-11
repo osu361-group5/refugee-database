@@ -1,10 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var db = require('../db');
-var refugees = require('../db/queries')(db).refugees;
+var ngo = require('../db/queries')(db).ngo;
 
 router.get('/search_refugees/:ngo_name/:refugee_name', function(req, res) {
-	refugees.getRefugeesByAssociationWithNGO(req.params.ngo_name,req.params.refugee_name)
+	ngo.getRefugeesByAssociationWithNGO(req.params.ngo_name,req.params.refugee_name)
 		.then((data)=> {
 			res.render('search_refugees', context=data);
 			done();
