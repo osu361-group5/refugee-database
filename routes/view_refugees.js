@@ -10,9 +10,4 @@ router.get('/view_refugees', function(req, res) {
 	refugees.getRefugeesByAssociationWithNGO(req.params.username).then((data)=>res.render('view_refugees', data));
 });*/
 
-router.get('/', function(req, res, next) {
-	res.render('view_refugees', { title: 'NGO: Associated Refugees ' });
-});
-
-
 module.exports = router;
