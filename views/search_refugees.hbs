@@ -1,0 +1,22 @@
+<h1>NGO: Search Refugees</h1>
+
+<table>
+	<thead>
+		<tr>
+			<th>Username</th>
+			<th>Creation Date</th>
+			<th>Description</th>
+			<th>Location Name</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#if results}}
+		{{#each results}}
+			<td>{{this.username}}</td>
+			<td>{{this.creation_date}}</td>
+			<td>{{this.description}}</td>
+			<td>{{this.location_name}}</td>
+		{{/each}}
+		{{/if}}
+	</tbody>
+</table>
