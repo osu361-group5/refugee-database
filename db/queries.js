@@ -154,7 +154,7 @@ class RefugeeDAO {
 }
 
 
-class RefugeeDAO {
+class NGODAO {
 
     constructor(db) {
         this.db = db;
