@@ -14,7 +14,7 @@ var sessionConfig = {
 // routes from express.router
 var index = require('./routes/index');
 var users = require('./routes/users');
-//var auth = require('./routes/auth');
+var auth = require('./routes/auth');
 var debugging = require('./routes/debugging');
 
 
@@ -26,7 +26,11 @@ app.set('view engine', 'hbs');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
+app.use(logger('dev', {
+  skip() {
+      return process.env.DISABLE_LOGGING == 1;
+  }
+}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -35,7 +39,7 @@ app.use(session(sessionConfig));
 
 app.use('/', index);
 app.use('/users', users);
-//app.use('/auth', auth);
+app.use('/auth', auth);
 app.use('/debugging', debugging);
 
 // catch 404 and forward to error handler

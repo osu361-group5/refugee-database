@@ -20,6 +20,7 @@
     "serve-favicon": "~2.3.2"
   },
   "devDependencies": {
-    "jasmine": "^2.5.3"
+    "jasmine": "^2.5.3",
+    "request": "^2.81.0"
   }
 }

@@ -9,13 +9,16 @@ var db = require('../db');
 /**
  *  set a flag for an active session
  */
-router.post('/login', (req, res) => {
-    var {username, password} = req.form;
+router.post('/login', (req, res, next) => {
+    var {username, password} = req.body;
     if (!(username && password)) {
         var err = new Error("form incomplete");
-        return res.next(err);
+        return next(err);
     }
 
+    if (username === 'test' && password === 'test') {
+        res.redirect('/')
+    }
 
 });
 
