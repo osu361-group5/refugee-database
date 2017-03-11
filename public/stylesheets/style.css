@@ -45,10 +45,11 @@ th, td {
 }
 
 .button {
-  background-color: aqua;
   width: 80px;
+  background-color: grey;
   text-align: center;
   padding: 20px 20px 20px 20px;
+  border-radius: 10px;
 }
 
 div>a {
