@@ -38,7 +38,7 @@ describe("NGO DAO tests", function() {
         test_utils
             .afterTest(pgpObj)
             .then(()=> {
-                refugees = null;
+                pgpObj = null;
                 done();
             })
     });
