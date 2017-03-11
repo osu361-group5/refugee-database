@@ -1,6 +1,5 @@
 const importedDb = require('./db');
 const fs = require('fs');
-const path = require('path');
 
 var tableRe = new RegExp("^[A-Z]+ [^;]+;$", 'gm');
 
@@ -47,6 +46,4 @@ if (require.main === module) {
 }
 
 
-module.exports = function (sqlFile, db=db) {
-    return readAllSqlFromFile(sqlFile, db);
-};
+module.exports = readAllSqlFromFile;
