@@ -15,8 +15,5 @@ router.get('/', function(req, res) {
 			done();
 		});
 });
-/*router.get('/view_refugees/:username', function(req, res) {
-	refugees.getRefugeesByAssociationWithNGO(req.params.username).then((data)=>res.render('view_refugees', data));
-});*/
 
 module.exports = router;
