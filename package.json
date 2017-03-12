@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "dbDatabase=test_db node node_modules/jasmine/bin/jasmine.js"
+    "test": "dbDatabase=test_db node node_modules/jasmine/bin/jasmine.js",
+    "createDb": "node db/util.js --create-test-data"
   },
   "dependencies": {
     "async": "^2.1.5",

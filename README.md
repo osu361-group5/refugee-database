@@ -15,6 +15,9 @@ Set environment variable for database host, ie
 
 Then do `npm start`
 
+To setup the database, do `npm run-script createDb`.  This will also
+setup a test refugee user.
+
 ## Running/Writing tests
 This project uses jasmine for testing.
 
