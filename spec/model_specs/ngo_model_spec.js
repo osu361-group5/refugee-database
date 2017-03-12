@@ -80,12 +80,12 @@ describe("NGO DAO tests", function() {
             })
             .catch((err) => done.fail(err));
         //associate ngo and refugee using ids
-       /* ngo.associate(ngoID, refugeeID)
+        ngo.associate(ngoID, refugeeID)
             .then((data)=>{
                 expect(data.id).toEqual(1);
                 done();
             })
-            .catch((err) => done.fail(err));*/
+            .catch((err) => done.fail(err));
     });
 
     });
