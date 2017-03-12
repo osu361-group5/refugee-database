@@ -209,18 +209,18 @@ class NGODAO {
         return associatedMembers;
     }
 
-    getRefugeesByAssociationWithNGO(name) {
+    getRefugeesByAssociationWithNGO(userId) {
         return new Promise((resolve, reject) => {
-            this.db.manyOrNone("SELECT ref.name, rep.creation_date, rep.description, rep.location_name FROM user_m AS u INNER JOIN ngo AS ngo ON ngo.user_id = u.id INNER JOIN refugee_ngo AS refno ON refno.ngo_id = ngo.id INNER JOIN refugee AS ref ON ref.id = refno.refugee_id INNER JOIN report AS rep ON rep.refugee_id = ref.id WHERE u.username = $1", [name])
+            this.db.manyOrNone("SELECT ref.name, rep.creation_date, rep.description, rep.location_name FROM user_m AS u INNER JOIN ngo AS ngo ON ngo.user_id = u.id INNER JOIN refugee_ngo AS refno ON refno.ngo_id = ngo.id INNER JOIN refugee AS ref ON ref.id = refno.refugee_id INNER JOIN report AS rep ON rep.refugee_id = ref.id WHERE u.id = $1", [userId])
             .then((data)=> resolve(data))
             .catch((err)=> reject(err))
         });
     }
 
 
-    findRefugeeAssociatedWithNGOByName(ngo_name, refugee_name) {
+    findRefugeeAssociatedWithNGOByName(userId, refugee_name) {
         return new Promise((resolve, reject) => {
-            this.db.manyOrNone("SELECT ref.name, rep.creation_date, rep.description, rep.location_name FROM user_m AS u INNER JOIN ngo AS ngo ON ngo.user_id = u.id INNER JOIN refugee_ngo AS refno ON refno.ngo_id = ngo.id INNER JOIN refugee AS ref ON ref.id = refno.refugee_id INNER JOIN report AS rep ON rep.refugee_id = ref.id WHERE u.username = $1 AND ref.name = $2", [ngo_name, refugee_name])
+            this.db.manyOrNone("SELECT ref.name, rep.creation_date, rep.description, rep.location_name FROM user_m AS u INNER JOIN ngo AS ngo ON ngo.user_id = u.id INNER JOIN refugee_ngo AS refno ON refno.ngo_id = ngo.id INNER JOIN refugee AS ref ON ref.id = refno.refugee_id INNER JOIN report AS rep ON rep.refugee_id = ref.id WHERE u.id = $1 AND ref.name = $2", [userId, refugee_name])
             .then((data)=> resolve(data))
             .catch((err)=> reject(err))
         });

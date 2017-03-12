@@ -4,7 +4,7 @@ var db = require('../db');
 var ngo = require('../db/queries')(db).ngo;
 
 router.get('/', function(req, res) {
-	ngo.getRefugeesByAssociationWithNGO(req.query.username)
+	ngo.getRefugeesByAssociationWithNGO(req.session.userID)
 		.then((data)=> {
 			res.render('view_refugees', context=data);
 			done();
