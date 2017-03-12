@@ -66,7 +66,11 @@ class UserDAO {
     }
 
     findUserByUsername(username) {
-        return testUser;
+        return new Promise((resolve, reject) => {
+            this.db.oneOrNone("SELECT * FROM user_m WHERE username = $1 ", [username])
+                .then((data) => resolve(data))
+                .catch((err) => reject(err));
+        });
     }
 
     getAllUsers() {

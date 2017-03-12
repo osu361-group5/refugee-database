@@ -1,4 +1,5 @@
 const request = require('request');
+var queries = require('../../db/queries');
 var testUtils = require('../test_utils');
 var testApp = require('../test_utils/test_app');
 
@@ -22,6 +23,7 @@ describe("Login Tests", function() {
                 pgpObj = res;
                 this.server = testApp(3001);
                 this.server.start();
+                this.users = queries(pgpObj.db).users;
                 done();
             })
             .catch((err) => process.exit(1))
@@ -48,19 +50,47 @@ describe("Login Tests", function() {
 
     describe('POST /auth/login', function() {
         it('correctly logs in a user', function(done) {
-            var reqObj= {
+            var username = 'actualuser';
+            var password = 'test';
+            var email = 'test@e.com';
+            var reqObj = {
+                url: getAbsUrl('auth/login'),
+                form: {
+                    username: username,
+                    password: password
+                }
+            };
+
+            this.users.createUser(username, password, email)
+                .then(() => {
+                    request.post(reqObj, function (error, response, body) {
+                        if (error) done.fail(error);
+                        expect(response.statusCode).toEqual(302);
+                        done();
+                    })
+                })
+                .catch((err) => {
+                    return done.fail(err);
+                });
+
+        });
+
+        it('returns error for incorrect logins', function(done) {
+            var reqObj = {
                 url: getAbsUrl('/auth/login'),
                 form: {
-                    username: 'test',
+                    username: 'test123',
                     password: 'test'
                 }
             };
 
             request.post(reqObj, function(error, response, body) {
                 if (error) done.fail(error);
-                expect(response.statusCode).toEqual(302);
+                expect(response.statusCode).toEqual(404);
                 done();
             });
+
+
         });
     });
 });
