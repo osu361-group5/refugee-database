@@ -79,4 +79,16 @@ describe("User DAO Tests", function() {
             .then(() => done())
             .catch((err) => done.fail(err));
     });
+
+    it("should be able to get user by username", function(done) {
+        users.createUser(username, password, email)
+            .then(() => users.findUserByUsername(username))
+            .then((data) => {
+                expect(data.username).toEqual(username);
+                expect(data.email).toEqual(email);
+            })
+            .then(() => done())
+            .catch((err) => done.fail(err));
+    });
+
 });
