@@ -17,6 +17,7 @@
  */
 
 const today = new Date();
+const crypto = require('../crypto');
 
 const testUser = {
     id: 1,
@@ -89,8 +90,14 @@ class UserDAO {
     }
 
     createUser(username, password, email) {
+
         return new Promise((resolve, reject) => {
-            return this.db.one("INSERT INTO user_m (username, password_hash, email) VALUES ($1, $2, $3) returning id", [username, password, email])
+            return crypto.hashPassword(password)
+                .then((hashedPassword) => {
+                    return this.db
+                        .one("INSERT INTO user_m (username, password_hash, email) VALUES ($1, $2, $3) returning id",
+                        [username, hashedPassword, email])
+                })
               .then((id) => resolve(id))
               .catch((err) => reject(err))
         });
@@ -225,6 +232,14 @@ class NGODAO {
             .catch((err)=> reject(err))
         });
     }
+
+    associate(ngoId, refugeeId) {
+        return new Promise((resolve, reject) => {
+            this.db.one("INSERT INTO refugee_ngo (refugee_id, ngo_id) VALUES ($1, $2) returning id", [refugeeId, ngoId])
+                .then((data) => resolve(data))
+                .catch((err) => reject(err))
+        });
+    }
 }
 
 module.exports = function(db) {
@@ -236,6 +251,11 @@ module.exports = function(db) {
     return {
         users: new UserDAO(db),
         refugees: new RefugeeDAO(db),
-        ngo: new NGODAO(db)
+        ngo: new NGODAO(db),
+        testData: {
+            testUser,
+            testRefugee,
+            associatedMembers
+        }
     }
 };
