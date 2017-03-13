@@ -39,7 +39,6 @@ describe("NGO DAO tests", function() {
         test_utils
             .afterTest(pgpObj)
             .then(()=> {
-                console.log("deleted");
                 pgpObj = null;
                 done();
             })
