@@ -184,9 +184,9 @@ class NGODAO {
      * @param name
      * @returns {Promise}
      */
-    create(userId, name) {
+    create(userId, organization) {
         return new Promise((resolve, reject) => {
-            this.db.one("INSERT INTO ngo (user_id, oranization) VALUES ($1, $2) returning id", [userId, organization])
+            this.db.one("INSERT INTO ngo (user_id, organization) VALUES ($1, $2) returning id", [userId, organization])
                 .then((data)=> resolve(data))
                 .catch((err)=> reject(err))
         });

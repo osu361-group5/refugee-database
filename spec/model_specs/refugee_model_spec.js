@@ -28,7 +28,8 @@ describe("Refugee DAO tests", function() {
             .then((data)=>{
                 testUserId = data.id;
                 done();
-            });
+            })
+            .catch((err) => console.log(err) || process.exit(1));
     });
 
 

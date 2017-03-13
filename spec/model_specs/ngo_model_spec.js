@@ -3,7 +3,7 @@ var test_utils = require('../test_utils');
 
 describe("NGO DAO tests", function() {
     // declare the handle for a refugee/user dao
-    var refugees;
+    var refugee;
     var ngo;
     var users;
 
@@ -15,6 +15,7 @@ describe("NGO DAO tests", function() {
     var password = 'password';
     var email = 'email@email.com';
     var testUserId;
+
     beforeEach(function(done) {
         test_utils
             .beforeTest(process.env.dbDatabase, process.env.dbHost)
@@ -23,7 +24,7 @@ describe("NGO DAO tests", function() {
                 // which is a user row
                 pgpObj = res;
                 ngo = DAOFactory(pgpObj.db).ngo;
-                refugee = DAOFactory(pgpObj.db).ngo;
+                refugee = DAOFactory(pgpObj.db).refugees;
                 users = DAOFactory(pgpObj.db).users;
                 return users.createUser(username, password, email);
             })
@@ -38,14 +39,16 @@ describe("NGO DAO tests", function() {
         test_utils
             .afterTest(pgpObj)
             .then(()=> {
+                console.log("deleted");
                 pgpObj = null;
                 done();
             })
+            .catch((err) => console.log(err) || process.exit(1))
     });
 
     it("creates an ngo object", function(done) {
         var name = "united nations";
-        ngo.create(testUserId, organization)
+        ngo.create(testUserId, name)
             .then((data) => {
                 expect(data.id).toEqual(1);
                 done();
@@ -59,33 +62,34 @@ describe("NGO DAO tests", function() {
         var ref_userID;
         var ngoID;
         var refugeeID;
+        var organizationName = "united nations";
 
         //ngo user already created with with testUserId, need refugee user
         users.createUser('testuser2', '12345', 'ref@refugee.com')
             .then((data)=>{
-                ref_userId = data.id;
+                ref_userID = data.id;
             })
-            .catch((err)=> done.fail(err));
-        //create a refugee associated with testuser2
-        refugee.create(ref_userID, ref_name)
-            .then((data)=>{
+            //create a refugee associated with testuser2
+            .then(() => refugee.create(ref_userID, ref_name))
+            .then((data) => {
                 refugeeID = data.id;
             })
-            .catch((err)=> done.fail(err));
-        //create NGO with testUserId
-        var name = "united nations";
-        ngo.create(testUserId, organization)
+            .then(() => {
+                //create NGO with testUserId
+                return ngo.create(testUserId, organizationName)
+            })
             .then((data) => {
                 ngoID = data.id;
             })
-            .catch((err) => done.fail(err));
-        //associate ngo and refugee using ids
-        ngo.associate(ngoID, refugeeID)
-            .then((data)=>{
+            .then(() => {
+                //associate ngo and refugee using ids
+                return ngo.associate(ngoID, refugeeID);
+            })
+            .then((data) => {
                 expect(data.id).toEqual(1);
                 done();
             })
-            .catch((err) => done.fail(err));
+            .catch((err)=> done.fail(err));
     });
 
 });
