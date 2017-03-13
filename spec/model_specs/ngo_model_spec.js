@@ -61,7 +61,7 @@ describe("NGO DAO tests", function() {
         var refugeeID;
 
         //ngo user already created with with testUserId, need refugee user
-        users.createUser('testuser2', '12345', 'ref@refugee.com');
+        users.createUser('testuser2', '12345', 'ref@refugee.com')
             .then((data)=>{
                 ref_userId = data.id;
             })
@@ -88,5 +88,4 @@ describe("NGO DAO tests", function() {
             .catch((err) => done.fail(err));
     });
 
-    });
 });
