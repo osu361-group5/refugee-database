@@ -54,7 +54,7 @@ describe("Login Tests", function() {
             var password = 'test';
             var email = 'test@e.com';
             var reqObj = {
-                url: getAbsUrl('auth/login'),
+                url: getAbsUrl('/auth/login'),
                 form: {
                     username: username,
                     password: password
@@ -72,7 +72,6 @@ describe("Login Tests", function() {
                 .catch((err) => {
                     return done.fail(err);
                 });
-
         });
 
         it('returns error for incorrect logins', function(done) {

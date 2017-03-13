@@ -16,9 +16,9 @@ DROP TABLE IF EXISTS report;
 
 CREATE TABLE IF NOT EXISTS user_m (
     id SERIAL PRIMARY KEY,
-    username VARCHAR(100),
-    email VARCHAR(100),
-    password_hash VARCHAR(100),
+    username VARCHAR(100) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password_hash VARCHAR(60),
     created_date DATE NOT NULL DEFAULT CURRENT_DATE
 );
 

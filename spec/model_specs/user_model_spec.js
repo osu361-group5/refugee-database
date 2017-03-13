@@ -41,6 +41,7 @@ describe("User DAO Tests", function() {
     it("Should create a user and return an id", function(done) {
         // set up the test
         var username2 = 'test2';
+        var email2 = 'email2';
 
         // do the test thing and assert, since its using promises :|
         users.createUser(username, password, email)
@@ -48,15 +49,29 @@ describe("User DAO Tests", function() {
                 expect(data.id).toEqual(1);
             })
             // try a second one, it should be now at count two
-            .then(()=> users.createUser(username2, password, email))
+            .then(()=> users.createUser(username2, password, email2))
             .then((data) => {
                 expect(data.id).toEqual(2);
                 done();
             })
             // if something unexpected happens in an asynchronous flow, use done.fail('msg')
             .catch((err) => done.fail(err));
+    });
 
+    it("should not create two users with the same username", function(done) {
+        var email2 = 'user2@email.com';
+        users.createUser(username, password, email)
+            .then(() => users.createUser(username, password, email2))
+            .then(() => done.fail('created two users with same username'))
+            .catch((err) => done());
+    });
 
+    it("should not create two users with same email", function(done) {
+        var username2 = 'user2';
+        users.createUser(username, password, email)
+            .then(() => users.createUser(username2, password, email))
+            .then(() => done.fail('created two users with same email'))
+            .catch((err) => done());
     });
 
     it("Test utility functions, the id should start at 1 for every test", function(done) {
@@ -89,6 +104,23 @@ describe("User DAO Tests", function() {
             })
             .then(() => done())
             .catch((err) => done.fail(err));
+    });
+
+    it("it should store a hashed version of a users password", function(done) {
+        users.createUser(username, password, email)
+            .then((data) => users.findById(data.id))
+            .then((data) => {
+                expect(data.password_hash === password).toBeFalsy("passwords are not the same");
+                return data.password_hash
+            })
+            .then((passwordHash) => {
+                return require('../../crypto').verifyPassword(passwordHash, password)
+            })
+            .then((res) => {
+                expect(res).toBeTruthy("password hashed incorrectly");
+                done();
+            })
+            .catch((err) => done.fail(err))
     });
 
 });

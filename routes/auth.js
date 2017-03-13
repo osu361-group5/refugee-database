@@ -14,13 +14,21 @@ var crypto = require('../crypto');
  */
 router.post('/login', (req, res, next) => {
     var {username, password} = req.body;
-
+    var userData;
     users.findUserByUsername(username)
         .then((data) => {
-            if (crypto.verifyPassword(data.password_hash, password)) {
-                req.session.userId = data.id;
+            if (data) {
+                userData = data;
+                return crypto.verifyPassword(data.password_hash, password);
+            }
+            else
+                return false;
+        })
+        .then((passwordCorrect) => {
+            if (passwordCorrect) {
+                req.session.userId = userData.id;
                 req.session.isLoggedIn = true;
-                req.session.username = data.username;
+                req.session.username = userData.username;
                 res.redirect('/');
             } else {
                 next();
@@ -29,7 +37,7 @@ router.post('/login', (req, res, next) => {
         .catch((err) => {
             var error = new Error(err);
             // user does not exist
-            next();
+            next(error);
         });
 });
 
