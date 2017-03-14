@@ -15,6 +15,12 @@ describe("NGO DAO tests", function() {
     var password = 'password';
     var email = 'email@email.com';
     var testUserId;
+    var ngo_name = "mark";
+    var ref_name = "bob";
+    var organizationName = "united nations";
+    var ngoID;
+    var refugeeID;
+    var ref_userID;
 
     beforeEach(function(done) {
         test_utils
@@ -46,8 +52,7 @@ describe("NGO DAO tests", function() {
     });
 
     it("creates an ngo object", function(done) {
-        var name = "united nations";
-        ngo.create(testUserId, name)
+        ngo.create(testUserId, organizationName)
             .then((data) => {
                 expect(data.id).toEqual(1);
                 done();
@@ -56,13 +61,6 @@ describe("NGO DAO tests", function() {
     });
 
     it("associate ngo with a refugee", function(done) {
-        var ngo_name = "mark";
-        var ref_name = "bob";
-        var ref_userID;
-        var ngoID;
-        var refugeeID;
-        var organizationName = "united nations";
-
         //ngo user already created with with testUserId, need refugee user
         users.createUser('testuser2', '12345', 'ref@refugee.com')
             .then((data)=>{
@@ -89,6 +87,78 @@ describe("NGO DAO tests", function() {
                 done();
             })
             .catch((err)=> done.fail(err));
+    });
+
+    it("find refugees associated with an NGO", function(done) {
+        var associationId;
+        //ngo user already created with testUser, need refugee user
+        users.createUser('testuser2', '12345', 'ref@refugee.com')
+            .then((data)=>{
+                ref_userID = data.id;
+            })
+            //create a refugee associated with testuser2
+            .then(() => refugee.create(ref_userID, ref_name))
+            .then((data) => {
+                refugeeID = data.id;
+            })
+            .then(() => {
+                //create NGO with testUserId
+                return ngo.create(testUserId, organizationName)
+            })
+            .then((data) => {
+                ngoID = data.id;
+            })
+            .then(() => {
+                //associate ngo and refugee using ids
+                return ngo.associate(ngoID, refugeeID);
+            })
+            .then((data) => {
+                associationId = data.id;
+            })
+            .then(() => { 
+                return ngo.getRefugeesByAssociationWithNGO(testUserId)
+            })
+            .then((data) => {
+                expect(data[0].id).toEqual(1) && expect(data[0].name).toEqual(ref_name);
+                done();
+            })
+            .catch((err) => done.fail(err));
+    });
+
+    it("find refugee by name associated with an NGO", function(done) {
+        var associationId;
+        //ngo user already created with testUser, need refugee user
+        users.createUser('testuser2', '12345', 'ref@refugee.com')
+            .then((data)=>{
+                ref_userID = data.id;
+            })
+            //create a refugee associated with testuser2
+            .then(() => refugee.create(ref_userID, ref_name))
+            .then((data) => {
+                refugeeID = data.id;
+            })
+            .then(() => {
+                //create NGO with testUserId
+                return ngo.create(testUserId, organizationName)
+            })
+            .then((data) => {
+                ngoID = data.id;
+            })
+            .then(() => {
+                //associate ngo and refugee using ids
+                return ngo.associate(ngoID, refugeeID);
+            })
+            .then((data) => {
+                associationId = data.id;
+            })
+            .then(() => {
+                return ngo.findRefugeeAssociatedWithNGOByName(testUserId, ref_name)
+            })
+            .then((data) => {
+                expect(data[0].id).toEqual(1) && expect(data[0].name).toEqual(ref_name);
+                done();
+            })
+            .catch((err) => done.fail(err));
     });
 
 });

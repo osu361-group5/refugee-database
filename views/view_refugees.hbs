@@ -3,19 +3,15 @@
 <table>
 	<thead>
 		<tr>
+			<th>Id</th>
 			<th>Username</th>
-			<th>Creation Date</th>
-			<th>Description</th>
-			<th>Location Name</th>
 		</tr>
 	</thead>
 	<tbody>
 		{{#if results}}
 		{{#each results}}
+			<td>{{this.id}}</td>
 			<td>{{this.username}}</td>
-			<td>{{this.creation_date}}</td>
-			<td>{{this.description}}</td>
-			<td>{{this.location_name}}</td>
 		{{/each}}
 		{{/if}}
 	</tbody>

@@ -228,18 +228,20 @@ class NGODAO {
         return associatedMembers;
     }
 
+    /*
+     *Returns data for refugees associated with an NGO via the refugee_ngo table
+     */
     getRefugeesByAssociationWithNGO(userId) {
         return new Promise((resolve, reject) => {
-            this.db.manyOrNone("SELECT ref.name, rep.creation_date, rep.description, rep.location_name FROM user_m AS u INNER JOIN ngo AS ngo ON ngo.user_id = u.id INNER JOIN refugee_ngo AS refno ON refno.ngo_id = ngo.id INNER JOIN refugee AS ref ON ref.id = refno.refugee_id INNER JOIN report AS rep ON rep.refugee_id = ref.id WHERE u.id = $1", [userId])
+            this.db.manyOrNone("SELECT ref.id, ref.name FROM ngo AS ngo INNER JOIN refugee_ngo AS refngo ON refngo.ngo_id = ngo.id INNER JOIN refugee AS ref ON ref.id = refngo.refugee_id WHERE ngo.user_id = $1", [userId])
             .then((data)=> resolve(data))
             .catch((err)=> reject(err))
         });
     }
 
-
     findRefugeeAssociatedWithNGOByName(userId, refugee_name) {
         return new Promise((resolve, reject) => {
-            this.db.manyOrNone("SELECT ref.name, rep.creation_date, rep.description, rep.location_name FROM user_m AS u INNER JOIN ngo AS ngo ON ngo.user_id = u.id INNER JOIN refugee_ngo AS refno ON refno.ngo_id = ngo.id INNER JOIN refugee AS ref ON ref.id = refno.refugee_id INNER JOIN report AS rep ON rep.refugee_id = ref.id WHERE u.id = $1 AND ref.name = $2", [userId, refugee_name])
+            this.db.manyOrNone("SELECT ref.id, ref.name FROM ngo AS ngo INNER JOIN refugee_ngo AS refno ON refno.ngo_id = ngo.id INNER JOIN refugee AS ref ON ref.id = refno.refugee_id WHERE ngo.user_id = $1 AND ref.name = $2", [userId, refugee_name])
             .then((data)=> resolve(data))
             .catch((err)=> reject(err))
         });
