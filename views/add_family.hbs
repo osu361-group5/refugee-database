@@ -1,13 +1,8 @@
-<h1>Add Associated Person</h1>
+<h1>{{title}}</h1>
 
-<form action="/associated_person/create" method="post">
+<form action="/associated_person" method="post">
     <fieldset>
 		<legend>Create a new associated person (such as a family member)</legend>
-		<div>
-			<!-- FIXME: better way to associate Refugee with AP-->
-			<label for='refugee_id'>Refugee Name:</label>
-			<input type="text" name="refugee_id">
-		</div>
 		<div>
 			<label for='associated_name'>Associated Person Name:</label>
 			<input type="text" name="associated_name">

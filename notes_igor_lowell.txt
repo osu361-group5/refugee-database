@@ -1,0 +1,6 @@
+Edit Profile
+Add Associated Person
+Remove Associated Person
+View Associated Persons
+Create Report
+View Reports

@@ -102,6 +102,18 @@ class UserDAO {
               .catch((err) => reject(err))
         });
     }
+
+    addAssociatedMember(username, associated_name) {
+        var data = findUserByUsername(username);
+        var id = data.id;
+
+        return new Promise((resolve, reject) => {
+            this.db.one("INSERT INTO associated_person (refugee_id, name) VALUES ($1, $2) returning id", [id, associated_name])
+                .then((data) => resolve(data))
+                .catch((err) => reject(err))
+        });
+    }
+        
 }
 
 class RefugeeDAO {
