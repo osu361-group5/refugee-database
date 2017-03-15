@@ -161,4 +161,39 @@ describe("NGO DAO tests", function() {
             .catch((err) => done.fail(err));
     });
 
+    it("get all NGOs", function(done) {
+        var NGO1 = "UN";
+        var NGO2 = "Red Cross";
+        var testUserId2;
+        var ngoId1;
+        var ngoId2;
+        //create a refugee associated with testuser
+        ngo.create(testUserId, NGO1)
+            .then((data) => {
+                ngoId1 = data.id;
+            })
+            //create a second user
+            .then(() => {
+                return users.createUser('testUser2', 'password', 'email2@email.com')
+            })
+            .then((data) => {
+                testUserId2 = data.id;
+            })
+            //make second user a refugee
+            .then(() => {
+                return ngo.create(testUserId2, NGO2)
+            })
+            .then((data) => {
+                ngoId2 = data.id;
+            })
+            .then(() => {
+                return ngo.getAllNGOs()
+            })
+            .then((data) => {
+                expect(data[0].id).toEqual(ngoId1) && expect(data[1].id).toEqual(ngoId2);
+                done();
+            })
+            .catch((err) => done.fail(err));
+    });
+
 });
