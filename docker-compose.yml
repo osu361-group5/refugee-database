@@ -18,7 +18,14 @@ services:
       - "./public:/usr/src/app/public"
       - "./app.js:/usr/src/app/app.js"
       - "./routes:/usr/src/app/routes"
+      - "./controllers:/usr/src/app/controllers"
+      - "./spec:/usr/src/app/spec"
     entrypoint:
       - "npm"
       - "start"
-
+    environment:
+      - dbHost=db
+      # make this 0 if you want all the logs to print out from the http requests in testing
+      - DISABLE_LOGGING=1
+      # make this 1 to print out extra debugging info
+      - DEBUG=0
