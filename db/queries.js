@@ -163,7 +163,11 @@ class RefugeeDAO {
      * @returns {Promise}
      */
     getAllRefugees() {
-        return [testRefugee];
+        return new Promise((resolve, reject) => {
+            this.db.manyOrNone("SELECT * FROM refugee")
+                .then((data) => resolve(data))
+                .catch((err) => reject(err))
+        });
     }
 
     /**
@@ -230,7 +234,11 @@ class NGODAO {
      * @returns {Promise}
      */
     getAllNGOs() {
-        return [testNGO];
+        return new Promise((resolve, reject) => {
+            this.db.manyOrNone("SELECT * FROM ngo")
+                .then((data) => resolve(data))
+                .catch((err) => reject(err))
+        });
     }
 
     /**

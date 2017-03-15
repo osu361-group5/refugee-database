@@ -70,6 +70,41 @@ describe("Refugee DAO tests", function() {
            .catch((err) => done.fail(err));
     });
 
+    it("get all refugees", function(done) {
+        var refname1 = "frank";
+        var refname2 = "john";
+        var testUserId2;
+        var refId1;
+        var refId2;
+        //create a refugee associated with testuser
+        refugees.create(testUserId, refname1)
+            .then((data) => {
+                refId1 = data.id;
+            })
+            //create a second user
+            .then(() => {
+                return users.createUser('testUser2', 'password', 'email2@email.com')
+            })
+            .then((data) => {
+                testUserId2 = data.id;
+            })
+            //make second user a refugee
+            .then(() => {
+                return refugees.create(testUserId2, refname2)
+            })
+            .then((data) => {
+                refId2 = data.id;
+            })
+            .then(() => {
+                return refugees.getAllRefugees()
+            })
+            .then((data) => {
+                expect(data[0].id).toEqual(refId1) && expect(data[1].id).toEqual(refId2);
+                done();
+            })
+            .catch((err) => done.fail(err));
+    });
+
     it("adds a report", function(done) {
        var name = "frank";
        var refId;
