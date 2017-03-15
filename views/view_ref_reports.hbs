@@ -1,0 +1,28 @@
+<h1>Reports for {{name}}</h1>
+
+<table>
+	<thead>
+		<tr>
+			<th>Location</th>
+			<th>Latitude</th>
+			<th>Longitude</th>
+			<th>Description</th>
+			<th>Creation Date</th>
+			<th>Edit Date</th>
+		</tr>
+	</thead>
+	<tbody>
+	{{#if results}}
+		{{#each results}}
+		<tr>
+			<td>{{this.location_name}}</td>
+			<td>{{this.latitude}}</td>
+			<td>{{this.longitude}}</td>
+			<td>{{this.description}}</td>
+			<td>{{this.creation_date}}</td>
+			<td>{{this.edit_date}}</td>
+		</tr>	
+		{{/each}}
+	{{/if}}
+	</tbody>
+</table>
