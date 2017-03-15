@@ -51,4 +51,19 @@ describe("Refugee DAO tests", function() {
             })
             .catch((err) => done.fail(err));
     });
+
+    it("associates a person with a refugee", function(done) {
+        var name = "some name";
+        var associated_name = "family member name";
+        refugees.create(testUserId, name)
+            .then((data) => {
+            expect(data.id).toEqual(1);
+    })
+        .then(()=> users.addAssociatedMember(name, associated_name))
+        .then((data) => {
+            expect(data.id).toEqual(1);
+        done();
+    })
+        .catch((err) => done.fail(err));
+    });
 });
