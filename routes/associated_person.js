@@ -11,7 +11,7 @@ var users = require('../db/queries')(db).users;
 /**
  *  set a flag for an active session
  */
-router.post('/associated_person', (req, res, next) => {
+router.post('/', (req, res, next) => {
 
     var {associated_name} = req.body;
     var username = req.session.userId;
@@ -24,7 +24,7 @@ router.post('/associated_person', (req, res, next) => {
         });
 });
 
-router.get('/associated_person', (req, res, next) => {
+router.get('/', (req, res, next) => {
   res.render('add_family', { title: 'Add Associated Member' });
 });
 
