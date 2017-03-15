@@ -137,7 +137,11 @@ class RefugeeDAO {
      * @returns {Promise} that resolves to a row instance
      */
     findByUserId(userId) {
-        return testRefugee;
+        return new Promise((resolve, reject) => {
+            this.db.one("SELECT * FROM refugee WHERE user_id = $1", [userId])
+                .then((data)=> resolve(data))
+                .catch((err)=> reject(err))
+        });
     }
 
     /**
@@ -169,6 +173,16 @@ class RefugeeDAO {
      */
     getAssociatedMembers(id) {
         return associatedMembers;
+    }
+
+    addReport(userId, location_name, longitude, latitude, description) {
+        var date = new Date();
+        var today = date.getFullYear()+'-'+date.getMonth()+'-'+date.getDate();
+        return new Promise((resolve, reject) => {
+            this.db.one("INSERT INTO report (refugee_id, location_name, longitude, latitude, description, edit_date) VALUES ((SELECT id FROM refugee WHERE user_id = $1),$2,$3,$4,$5,$6) returning id",[userId, location_name, longitude, latitude, description, today])
+                .then((data)=> resolve(data))
+                .catch((err)=> reject(err))
+        });
     }
 }
 
