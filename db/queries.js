@@ -256,22 +256,30 @@ class NGODAO {
     getRefugeesByAssociationWithNGO(userId) {
         return new Promise((resolve, reject) => {
             this.db.manyOrNone("SELECT ref.id, ref.name FROM ngo AS ngo INNER JOIN refugee_ngo AS refngo ON refngo.ngo_id = ngo.id INNER JOIN refugee AS ref ON ref.id = refngo.refugee_id WHERE ngo.user_id = $1", [userId])
-            .then((data)=> resolve(data))
-            .catch((err)=> reject(err))
+            .then((data) => resolve(data))
+            .catch((err) => reject(err))
         });
     }
 
     findRefugeeAssociatedWithNGOByName(userId, refugee_name) {
         return new Promise((resolve, reject) => {
             this.db.manyOrNone("SELECT ref.id, ref.name FROM ngo AS ngo INNER JOIN refugee_ngo AS refno ON refno.ngo_id = ngo.id INNER JOIN refugee AS ref ON ref.id = refno.refugee_id WHERE ngo.user_id = $1 AND ref.name = $2", [userId, refugee_name])
-            .then((data)=> resolve(data))
-            .catch((err)=> reject(err))
+            .then((data) => resolve(data))
+            .catch((err) => reject(err))
         });
     }
 
     associate(ngoId, refugeeId) {
         return new Promise((resolve, reject) => {
             this.db.one("INSERT INTO refugee_ngo (refugee_id, ngo_id) VALUES ($1, $2) returning id", [refugeeId, ngoId])
+                .then((data) => resolve(data))
+                .catch((err) => reject(err))
+        });
+    }
+
+    getReports(refugeeId) {
+        return new Promise((resolve, reject) => {
+            this.db.manyOrNone("SELECT * FROM report WHERE refugee_id = $1",[refugeeId])
                 .then((data) => resolve(data))
                 .catch((err) => reject(err))
         });

@@ -3,15 +3,23 @@
 <table>
 	<thead>
 		<tr>
-			<th>Id</th>
-			<th>Username</th>
+			<th>Refugee Name</th>
+			<th></th>
 		</tr>
 	</thead>
 	<tbody>
 		{{#if results}}
 		{{#each results}}
-			<td>{{this.id}}</td>
-			<td>{{this.username}}</td>
+			<tr>
+				<td>{{this.name}}</td>
+				<td class="td_button">
+					<form action="/view_ref_reports" method="post">
+						<input type="hidden" name="id" value="{{this.id}}">
+						<input type="hidden" name="name" value="{{this.name}}">
+						<input type="submit" value="Reports">
+					</form>
+				</td>
+			</tr>
 		{{/each}}
 		{{/if}}
 	</tbody>

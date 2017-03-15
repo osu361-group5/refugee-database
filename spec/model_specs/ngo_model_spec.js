@@ -196,4 +196,30 @@ describe("NGO DAO tests", function() {
             .catch((err) => done.fail(err));
     });
 
+    it("get refugee reports", function(done) {
+        var reportId;
+	//create another user
+        users.createUser('testuser2', '12345', 'ref@refugee.com')
+            .then((data)=>{
+                ref_userID = data.id;
+            })
+            //create a refugee associated with testuser2
+            .then(() => refugee.create(ref_userID, ref_name))
+            .then((data) => { refugeeID = data.id; })
+            //add a report associated with refugee
+            .then(() => {
+               return refugee.addReport(ref_userID, 'tahiti', 40.1234, 123.4567, 'send food') 
+            })
+            .then((data) => { reportId = data.id })
+            //get the report using refugee id
+            .then(() => {
+                return ngo.getReports(refugeeID)
+            })
+            .then((data) => {
+                expect(data[0].id).toEqual(reportId);
+                done();
+            })
+            .catch((er) => done.fail(err));
+    });
+
 });

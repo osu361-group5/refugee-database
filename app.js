@@ -17,10 +17,11 @@ var users = require('./routes/users');
 var auth = require('./routes/auth');
 var debugging = require('./routes/debugging');
 var view_refugees = require('./routes/view_refugees');
-var ngo_options = require('./routes/ngo_options');
+var ngo_dash = require('./routes/ngo_dash');
+var search_refugees = require('./routes/search_refugees'); 
 var associated_person = require('./routes/associated_person');
 var refugee_dashboard = require('./routes/refugee_dashboard');
-
+var view_ref_reports = require('./routes/view_ref_reports');
 
 var app = express();
 
@@ -47,9 +48,10 @@ app.use('/auth', auth);
 app.use('/debugging', debugging);
 app.use('/view_refugees', view_refugees);
 app.use('/associated_person', associated_person);
-app.use('/ngo_options', ngo_options);
 app.use('/refugee_dashboard', refugee_dashboard);
-
+app.use('/ngo_dash', ngo_dash);
+app.use('/search_refugees', search_refugees);
+app.use('/view_ref_reports', view_ref_reports);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
