@@ -65,5 +65,45 @@ describe("Refugee DAO tests", function() {
         done();
     })
         .catch((err) => done.fail(err));
+   
+    it("find a user by id", function(done) {
+       var name = "frank";
+       var refId;
+       //create a refugee associated with testuser
+       refugees.create(testUserId, name)
+           .then((data) => {
+               refId = data.id;
+           })
+           .then(() => {
+               return refugees.findByUserId(testUserId)
+           })
+           .then((data) => {
+               expect(data.id).toEqual(refId);
+               done();
+           })
+           .catch((err) => done.fail(err));
+    });
+
+    it("adds a report", function(done) {
+       var name = "frank";
+       var refId;
+       var location_name = 'tahiti';
+       var longitude = 123.3185558;
+       var latitude = 44.5630283;
+       var description = 'im a refugee and need help';
+       //create a refugee associated with testuser
+       refugees.create(testUserId, name)
+           .then((data) => {
+               refId = data.id;
+           })
+           //create a report associated with the refugee
+           .then(() => {
+               return refugees.addReport(testUserId, location_name, longitude, latitude, description)
+           })
+           .then((data) => {
+               expect(data.id).toEqual(1);
+               done();
+           })
+           .catch((err) => done.fail(err));
     });
 });
