@@ -62,7 +62,7 @@ describe("NGO DAO tests", function() {
 
     it("associate ngo with a refugee", function(done) {
         //ngo user already created with with testUserId, need refugee user
-        users.createUser('testuser2', '12345', 'ref@refugee.com')
+        users.createUser('testuser2', '123dapq45', 'ref@refugee.com')
             .then((data)=>{
                 ref_userID = data.id;
             })
@@ -92,7 +92,7 @@ describe("NGO DAO tests", function() {
     it("find refugees associated with an NGO", function(done) {
         var associationId;
         //ngo user already created with testUser, need refugee user
-        users.createUser('testuser2', '12345', 'ref@refugee.com')
+        users.createUser('testuser2', '123bbb45', 're123f@refugee.com')
             .then((data)=>{
                 ref_userID = data.id;
             })
@@ -128,7 +128,7 @@ describe("NGO DAO tests", function() {
     it("find refugee by name associated with an NGO", function(done) {
         var associationId;
         //ngo user already created with testUser, need refugee user
-        users.createUser('testuser2', '12345', 'ref@refugee.com')
+        users.createUser('testuser2', '1asdf2345', 'reaaf@refugee.com')
             .then((data)=>{
                 ref_userID = data.id;
             })
@@ -174,7 +174,7 @@ describe("NGO DAO tests", function() {
             })
             //create a second user
             .then(() => {
-                return users.createUser('testUser2', 'password', 'email2@email.com')
+                return users.createUser('testUser2', 'pass2', 'email3@email.com')
             })
             .then((data) => {
                 testUserId2 = data.id;
@@ -199,7 +199,7 @@ describe("NGO DAO tests", function() {
     it("get refugee reports", function(done) {
         var reportId;
 	//create another user
-        users.createUser('testuser2', '12345', 'ref@refugee.com')
+        users.createUser('testuser2', '12345', 'ref22s@refugee.com')
             .then((data)=>{
                 ref_userID = data.id;
             })

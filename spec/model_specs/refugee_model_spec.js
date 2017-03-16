@@ -65,6 +65,7 @@ describe("Refugee DAO tests", function() {
         done();
     })
         .catch((err) => done.fail(err));
+    });
    
     it("find a user by id", function(done) {
        var name = "frank";
@@ -97,7 +98,7 @@ describe("Refugee DAO tests", function() {
             })
             //create a second user
             .then(() => {
-                return users.createUser('testUser2', 'password', 'email2@email.com')
+                return users.createUser('testUser2', 'pasdsafsword2', 'edfmail2@email.com')
             })
             .then((data) => {
                 testUserId2 = data.id;

@@ -179,6 +179,15 @@ class RefugeeDAO {
         return associatedMembers;
     }
 
+    /*
+     * adds a report associated with the user_id of a refugee 
+     * @param: userId (int)
+     * @param: location_name (string)
+     * @param: longitude (float)
+     * @param: latitude (float)
+     * @param: description (text)
+     * @returns {Promise}
+     */
     addReport(userId, location_name, longitude, latitude, description) {
         var date = new Date();
         var today = date.getFullYear()+'-'+date.getMonth()+'-'+date.getDate();
@@ -230,7 +239,7 @@ class NGODAO {
     }
 
     /**
-     * gets all the refugees from database
+     * gets all the ngos from database
      * @returns {Promise}
      */
     getAllNGOs() {
@@ -241,17 +250,10 @@ class NGODAO {
         });
     }
 
-    /**
-     * gets all associated members for a particular refugee
-     * @param id
-     * @returns {Promise}
-     */
-    getAssociatedMembers(id) {
-        return associatedMembers;
-    }
-
     /*
-     *Returns data for refugees associated with an NGO via the refugee_ngo table
+     * Returns data for refugees associated with an NGO via the refugee_ngo table
+     * @param: userId (int)
+     * @returns {Promise}
      */
     getRefugeesByAssociationWithNGO(userId) {
         return new Promise((resolve, reject) => {
@@ -261,6 +263,12 @@ class NGODAO {
         });
     }
 
+    /*
+     * Returns data for refugees associated with an NGO via the refugee_ngo table where the name is refugee_name
+     * @param: userId (int)
+     * @param: refugee_name (string)
+     * @returns {Promise}
+     */
     findRefugeeAssociatedWithNGOByName(userId, refugee_name) {
         return new Promise((resolve, reject) => {
             this.db.manyOrNone("SELECT ref.id, ref.name FROM ngo AS ngo INNER JOIN refugee_ngo AS refno ON refno.ngo_id = ngo.id INNER JOIN refugee AS ref ON ref.id = refno.refugee_id WHERE ngo.user_id = $1 AND ref.name = $2", [userId, refugee_name])
@@ -269,6 +277,12 @@ class NGODAO {
         });
     }
 
+    /*
+     * Associates an ngo with a refugee in the refugee_ngo table
+     * @param: ngoId (int)
+     * @param: refugeeId (int)
+     * @returns {Promise}
+     */
     associate(ngoId, refugeeId) {
         return new Promise((resolve, reject) => {
             this.db.one("INSERT INTO refugee_ngo (refugee_id, ngo_id) VALUES ($1, $2) returning id", [refugeeId, ngoId])
@@ -276,7 +290,12 @@ class NGODAO {
                 .catch((err) => reject(err))
         });
     }
-
+    
+    /*
+     * Returns all reports associated with a refugee
+     * @param: refugeeId (int)
+     * @returns {Promise}
+     */
     getReports(refugeeId) {
         return new Promise((resolve, reject) => {
             this.db.manyOrNone("SELECT * FROM report WHERE refugee_id = $1",[refugeeId])
