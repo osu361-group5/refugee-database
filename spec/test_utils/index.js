@@ -4,6 +4,7 @@
 
 const defaultDB = 'postgres';
 const dbUtils = require('../../db/util');
+const config = require('../../config');
 
 var db, pgp, testPGP, testDB;
 
@@ -84,11 +85,10 @@ function dropDatabase(databaseName, dbHost) {
 function getTestDatabase({
     dbDatabase,
     dbPort,
-    dbPassword,
+    dbPass,
     dbUser,
     dbHost}) {
-
-    var connectionString = `postgres://${dbUser}:${dbPassword}@${dbHost}:${dbPort}/${dbDatabase}`;
+    var connectionString = `postgres://${dbUser}:${dbPass}@${dbHost}:${dbPort}/${dbDatabase}`;
     if (!testPGP) {
         testPGP = require('pg-promise')();
         testDB = testPGP(connectionString)
@@ -105,7 +105,7 @@ function beforeTest(dbDatabase, dbHost) {
     return new Promise((resolve, reject) => {
         createDatabase(dbDatabase, dbHost)
             .then(()=> {
-                res = getTestDatabase(process.env);
+                res = getTestDatabase(config);
                 return dbUtils('./db/schema.sql', res.db);
             })
             .then(() => resolve(res))
