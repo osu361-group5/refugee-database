@@ -50,10 +50,8 @@ th, td {
   text-align: center;
   padding: 20px 20px 20px 20px;
   border-radius: 10px;
+  text-decoration: none;
+  color: black;
 }
 
-div>a {
-  color: black;
-  text-decoration: none;
-}
 
