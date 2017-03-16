@@ -278,6 +278,20 @@ class NGODAO {
     }
 
     /*
+     * Returns data for refugees associated with an NGO via the refugee_ngo table where the name is refugee_name
+     * @param: userId (int)
+     * @param: query (string)
+     * @returns {Promise}
+     */
+    searchForRefugee(userId, query) {
+        return new Promise((resolve, reject) => {
+            this.db.manyOrNone("SELECT ref.id, ref.name FROM ngo AS ngo INNER JOIN refugee_ngo AS refno ON refno.ngo_id = ngo.id INNER JOIN refugee AS ref ON ref.id = refno.refugee_id WHERE ngo.user_id = $1 AND ref.name LIKE '%$2#%'",[userId, query])
+               .then((data) => resolve(data))
+               .catch((err) => reject(err))
+        }); 
+    }
+
+    /*
      * Associates an ngo with a refugee in the refugee_ngo table
      * @param: ngoId (int)
      * @param: refugeeId (int)

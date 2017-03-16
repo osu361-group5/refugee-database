@@ -16,7 +16,7 @@ describe("NGO DAO tests", function() {
     var email = 'email@email.com';
     var testUserId;
     var ngo_name = "mark";
-    var ref_name = "bob";
+    var ref_name = "bartholomew";
     var organizationName = "united nations";
     var ngoID;
     var refugeeID;
@@ -219,7 +219,76 @@ describe("NGO DAO tests", function() {
                 expect(data[0].id).toEqual(reportId);
                 done();
             })
-            .catch((er) => done.fail(err));
+            .catch((err) => done.fail(err));
+    });
+
+    it("wildcard search for refugee", function(done) {
+        //ngo user already created with testUser, need refugee user
+        users.createUser('testuser2', '1asdf2345', 'reaaf@refugee.com')
+            .then((data)=>{
+                ref_userID = data.id;
+            })
+            //create a refugee associated with testuser2
+            .then(() => refugee.create(ref_userID, ref_name))
+            .then((data) => {
+                refugeeID = data.id;
+            })
+            .then(() => {
+                //create NGO with testUserId
+                return ngo.create(testUserId, organizationName)
+            })
+            .then((data) => {
+                ngoID = data.id;
+            })
+            .then(() => {
+                //associate ngo and refugee using ids
+                return ngo.associate(ngoID, refugeeID);
+            })
+            .then(() => {
+                return ngo.searchForRefugee(testUserId, ref_name.slice(1, 5))
+            })
+            .then((data) => {
+                if(data.length == 0) {
+                   done.fail('Search doesnt work');
+                   return;
+                }
+                expect(data.length).toBeGreaterThan(0);
+                expect(data[0].name).toEqual(ref_name);
+                done();
+            })
+            .catch((err) => done.fail(err));
+    });
+
+    it("wildcard search failure for refugee", function(done) {
+        //ngo user already created with testUser, need refugee user
+        users.createUser('testuser2', '1asdf2345', 'reaaf@refugee.com')
+            .then((data)=>{
+                ref_userID = data.id;
+            })
+            //create a refugee associated with testuser2
+            .then(() => refugee.create(ref_userID, ref_name))
+            .then((data) => {
+                refugeeID = data.id;
+            })
+            .then(() => {
+                //create NGO with testUserId
+                return ngo.create(testUserId, organizationName)
+            })
+            .then((data) => {
+                ngoID = data.id;
+            })
+            .then(() => {
+                //associate ngo and refugee using ids
+                return ngo.associate(ngoID, refugeeID);
+            })
+            .then(() => {
+                return ngo.searchForRefugee(testUserId, 'zzz')
+            })
+            .then((data) => {
+                expect(data.length).toEqual(0);
+                done();
+            })
+            .catch((err) => done.fail(err));
     });
 
 });
