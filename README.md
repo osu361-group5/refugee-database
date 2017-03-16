@@ -25,7 +25,26 @@ tests go in the spec directory.  Each file should be of the following
 format, `some_name_for_some_tests_spec.js` import part is the spec part.
 All files ending in `spec.js` will be picked up by the testing harness.
 
-running tests: from root of project, do `npm test`
+running tests: from root of project, do `npm test`.  This assumes that you
+have the environment variables properly set, `dbHost` should be set to `localhost`
+if the postgres server is running locally.
+
+running the tests using docker compose:
+1) make sure the containers are running
+```bash
+$ docker-compose up
+```
+2) the previous step launched the app on port 3000.  you can execute
+arbitrary commands on running containers, in this case, you will be running
+the tests.  There is a npm script that runs the test commands in the running
+container. Note, all the following commands need to run in the 
+```bash
+$ npm run-script testDocker
+```
+or you can use docker-compose directly
+```bash
+$ docker-compose exec app npm test
+```
 
 ## Using Docker
 If you have Docker & docker-compose installed, running the app is 
