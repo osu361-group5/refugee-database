@@ -25,8 +25,11 @@ router.post('/', (req, res, next) => {
 });
 
 router.get('/', (req, res, next) => {
+  //users.createUser('igor','pwd','email');
   res.render('add_family', { title: 'Add Associated Member' });
 });
+
+
 
 
 
