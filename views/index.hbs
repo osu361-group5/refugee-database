@@ -11,5 +11,16 @@
     <div class = "field">User Name <input type="text" name="username"></div>
     <div class = "field">Password <input type="password" name="password"></div>
     <div class="login-button"><input type="submit" value="Login"></div>
+
 </form>
+<div class="debugging-section">
+    <p>use the following for debugging or testing the app</p>
+    <form action="/debugging/set-refugee-session" method="get">
+        <input type="submit" value="login as the test refugee">
+    </form>
+
+    <form action="/debugging/set-ngo-session" method="get">
+        <input type="submit" value="login as the test ngo">
+    </form>
+</div>
 
