@@ -59,7 +59,10 @@ function createTestData() {
     var refugeeId;
 
     return daos.users.createUser(username, password, email)
-        .then((data) => daos.refugees.create(data.id, name))
+        .then((data) => {
+            refUserId = data.id;
+            return daos.refugees.create(data.id, name)
+        })
         .then((data) => {
             refugeeId = data.id;
             return daos.users.createUser(ngoUsername, ngoPassword, ngoEmail);
@@ -68,8 +71,12 @@ function createTestData() {
             return daos.ngo.create(data.id, organization)
                 .then((ngoData) => daos.ngo.associate(ngoData.id, refugeeId))
         })
+        .then(() => {
+            return daos.refugees.addReport(refUserId, 'Cuba', -82.383333, 23.133333, "Need more cigars")
+        })
         .then(() => console.log("test data created"))
         .catch((err) => console.log(err));
+
 }
 
 /** this branch executes if you run the from the command line */

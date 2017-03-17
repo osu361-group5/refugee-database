@@ -3,16 +3,16 @@ var router = express.Router();
 var db = require('../db');
 var ngo = require('../db/queries')(db).ngo;
 
-//var id = req.session.userId;
-var id = 1;
-
 router.get('/', function(req, res, next) {
-	ngo.findRefugeeAssociatedWithNGOByName(id,req.query.refugee_name)
+	ngo.findRefugeeAssociatedWithNGOByName(req.session.userId,req.query.refugee_name)
 		.then((data)=> {
+                        console.log(data[0]);
+			console.log(req.query.refugee_name);
+			console.log(req.session.userId);
 			var context = {};
 			context.results = data;
-			if(data[0] != null)
-				res.render('search_refugees', context);
+			if(data.length != 0)
+				res.render('view_refugees', context);
 			else
 				res.send('Refugee Not Found');
 		})
