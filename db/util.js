@@ -15,6 +15,7 @@ function logPromise(...args) {
 
 /** reads a sql text and executes arbitrary commands
  * the command results will be discarded
+ * CAUTION: will not run triggers in its current form
  *
  * path for sqlFile should be relative to root of project
  */
@@ -48,7 +49,6 @@ var commands = {
  * returns: {Promise} chain of promises
  */
 function createTestData() {
-    console.log("ran");
     var daos = require('./queries')(importedDb);
     var {username, password, email} = daos.testData.testUser;
     var {name} = daos.testData.testRefugee;
@@ -68,11 +68,10 @@ if (require.main === module) {
                 .map((d)=> d.slice(2))                      // this will be passed as --some-command
                 .filter((d) => d in commands)               // and if they're in the commands obj
                 .reduce((chain, d) => {                     // start the promise chain
-                    console.log('running', d);
                     return chain.then(() => commands[d]())
                 }, Promise.resolve([]));
         })
-        .then(()=> console.log("finally") || process.exit(0))
+        .then(()=> console.log("done") || process.exit(0))
         .catch((err) => {
             console.log(err);
             process.exit(1);

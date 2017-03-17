@@ -6,7 +6,8 @@
     "start": "node ./bin/www",
     "test": "dbDatabase=test_db node node_modules/jasmine/bin/jasmine.js",
     "createDb": "node db/util.js --create-test-data",
-    "testDocker": "docker-compose exec app npm test"
+    "testDocker": "docker-compose exec app npm test",
+    "createDockerDb": "docker-compose exec app npm run-script createDb"
   },
   "dependencies": {
     "async": "^2.1.5",
