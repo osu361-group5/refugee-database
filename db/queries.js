@@ -27,6 +27,13 @@ const testUser = {
     createdDate: today
 };
 
+const testNGOUser = {
+    id: 2,
+    username: 'vader',
+    password: 'password',
+    email: 'vader@empire.org'
+};
+
 const testRefugee = {
     id: 1,
     userId: 1,
@@ -34,9 +41,8 @@ const testRefugee = {
 };
 
 const testNGO = {
-    id: 1,
-    userId: 1,
-    name: 'vader'
+    userId: 2,
+    organization: 'The Empire'
 };
 
 const associatedMembers = [
@@ -343,7 +349,9 @@ module.exports = function(db) {
         testData: {
             testUser,
             testRefugee,
-            associatedMembers
+            associatedMembers,
+            testNGO,
+            testNGOUser
         }
     }
 };

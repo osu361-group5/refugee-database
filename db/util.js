@@ -51,9 +51,23 @@ var commands = {
 function createTestData() {
     var daos = require('./queries')(importedDb);
     var {username, password, email} = daos.testData.testUser;
+    var {username: ngoUsername,
+        password: ngoPassword,
+        email: ngoEmail } = daos.testData.testNGOUser;
+    var {organization} = daos.testData.testNGO;
     var {name} = daos.testData.testRefugee;
+    var refugeeId;
+
     return daos.users.createUser(username, password, email)
         .then((data) => daos.refugees.create(data.id, name))
+        .then((data) => {
+            refugeeId = data.id;
+            return daos.users.createUser(ngoUsername, ngoPassword, ngoEmail);
+        })
+        .then((data) => {
+            return daos.ngo.create(data.id, organization)
+                .then((ngoData) => daos.ngo.associate(ngoData.id, refugeeId))
+        })
         .then(() => console.log("test data created"))
         .catch((err) => console.log(err));
 }
