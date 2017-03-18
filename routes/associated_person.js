@@ -17,11 +17,16 @@ router.post('/', (req, res, next) => {
     var username = req.session.userId;
 
     users.addAssociatedMember(username,associated_name)
+        .then((data) => {
+             res.redirect('/refugee_dashboard?status=1');
+        })
         .catch((err) => {
             var error = new Error(err);
             // user does not exist
             next(error);
         });
+
+
 });
 
 router.get('/', (req, res, next) => {

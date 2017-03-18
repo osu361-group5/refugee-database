@@ -113,19 +113,19 @@ class UserDAO {
         //var data = this.findUserByUsername(username);
         //this.createUser('test2','pwd','email');
         //this.db.one("INSERT INTO refugee (user_id, name) VALUES ($1, $2) returning id", [1, 'joe']);
-        console.log('got here');
+        console.log('111got here');
         //this.db.one("INSERT INTO refugee (name) VALUES ($1, $2) returning id", [id, associated_name])
         //var id = data.id;
-        var id = 1;
+       // var id = 1;
+
+        // return new Promise((resolve, reject) => {
+        //     this.db.one("INSERT INTO refugee (user_id, name) VALUES ($1, $2) returning id", [1, 'joe'])
+        //         .then((data) => resolve(data))
+        //         .catch((err) => reject(err))
+        // });
 
         return new Promise((resolve, reject) => {
-            this.db.one("INSERT INTO refugee (user_id, name) VALUES ($1, $2) returning id", [1, 'joe'])
-                .then((data) => resolve(data))
-                .catch((err) => reject(err))
-        });
-
-        return new Promise((resolve, reject) => {
-            this.db.one("INSERT INTO associated_person (refugee_id, name) VALUES ($1, $2) returning id", [id, associated_name])
+            this.db.one("INSERT INTO associated_person (refugee_id, name) VALUES ($1, $2) returning id", [1, associated_name])
                 .then((data) => resolve(data))
                 .catch((err) => reject(err))
         });
