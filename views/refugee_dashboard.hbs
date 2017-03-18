@@ -1,6 +1,7 @@
 <h1>{{title}}</h1>
 
-<form action="/associated_person">
+<form action="/refugee_dashboard">
+    <input type ='hidden' name='status' value="0" id='status'>
     <input type="submit" value="Edit Profile" />
 </form>
 
@@ -8,18 +9,25 @@
     <input type="submit" value="Add Associated Person" />
 </form>
 
-<form action="/associated_person">
+<form action="/refugee_dashboard">
+    <input type ='hidden' name='status' value="0" id='status'>
     <input type="submit" value="Remove Associated Person" />
 </form>
 
-<form action="/associated_person">
+<form action="/refugee_dashboard">
+    <input type ='hidden' name='status' value="0" id='status'>
     <input type="submit" value="View Associated Persons" />
 </form>
 
-<form action="/associated_person">
+<form action="/refugee_dashboard">
+    <input type ='hidden' name='status' value="0" id='status'>
     <input type="submit" value="Create Report" />
 </form>
 
-<form action="/associated_person">
+<form action="/refugee_dashboard">
+    <input type ='hidden' name='status' value="0" id='status'>
     <input type="submit" value="View Report" />
 </form>
+
+
+<h5>{{status}}</h5>

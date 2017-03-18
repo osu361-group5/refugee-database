@@ -52,17 +52,28 @@ describe("Refugee DAO tests", function() {
             .catch((err) => done.fail(err));
     });
 
+    // create a refugee from existing user id
+    // associate a family member with refugee
+    // verify using getAssociatedMembers(refugee id)
+
     it("associates a person with a refugee", function(done) {
         var name = "some name";
         var associated_name = "family member name";
+        var refId;
         refugees.create(testUserId, name)
             .then((data) => {
-            expect(data.id).toEqual(1);
-    })
-        .then(()=> users.addAssociatedMember(name, associated_name))
-        .then((data) => {
-            expect(data.id).toEqual(1);
-        done();
+                refId = data.id;
+            })
+            .then(() => {
+                return refugees.addAssociatedMember(refId, associated_name);
+            })
+            .then((data1) => {
+                refugees.getAssociatedMembers(refId)
+                    .then((data2) => {
+                        expect(data1.id).toEqual(data2[0].id);
+                        done();
+                })
+            })
     })
         .catch((err) => done.fail(err));
     });
