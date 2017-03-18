@@ -109,7 +109,7 @@ class UserDAO {
         });
     }
 
-    addAssociatedMember(username, associated_name) {
+    addAssociatedMember(refugee_id, associated_name) {
         //var data = this.findUserByUsername(username);
         //this.createUser('test2','pwd','email');
         //this.db.one("INSERT INTO refugee (user_id, name) VALUES ($1, $2) returning id", [1, 'joe']);
@@ -125,7 +125,7 @@ class UserDAO {
         // });
 
         return new Promise((resolve, reject) => {
-            this.db.one("INSERT INTO associated_person (refugee_id, name) VALUES ($1, $2) returning id", [1, associated_name])
+            this.db.one("INSERT INTO associated_person (refugee_id, name) VALUES ($1, $2) returning id", [refugee_id, associated_name])
                 .then((data) => resolve(data))
                 .catch((err) => reject(err))
         });

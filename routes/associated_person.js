@@ -5,6 +5,7 @@ var express = require('express');
 var router = express.Router();
 var db = require('../db');
 var users = require('../db/queries')(db).users;
+var refugees = require('../db/queries')(db).refugees;
 
 
 
@@ -14,17 +15,37 @@ var users = require('../db/queries')(db).users;
 router.post('/', (req, res, next) => {
 
     var {associated_name} = req.body;
-    var username = req.session.userId;
+    var user_session_id = req.session.userId;
 
-    users.addAssociatedMember(username,associated_name)
+    // get user id from username
+    users.findById(user_session_id)
         .then((data) => {
-             res.redirect('/refugee_dashboard?status=1');
-        })
-        .catch((err) => {
-            var error = new Error(err);
-            // user does not exist
-            next(error);
-        });
+            var userID = data.id
+            console.log('find by id stuff indside' + userID);
+
+            // get refugee id from user id
+            refugees.findByUserId(userID)
+                .then((data) => {
+                    var refugeeID = data.id;
+                    console.log('find refugee by id ' + refugeeID);
+
+                    users.addAssociatedMember(refugeeID,associated_name)
+                        .then((data) => {
+                        res.redirect('/refugee_dashboard?status=1');
+                    })
+                    .catch((err) => {
+                        var error = new Error(err);
+                    // user does not exist
+                    next(error);
+                    });
+            });
+    });
+
+    // get refugee id from user id
+
+    // pass refugee id to addAssociatedMember
+
+
 
 
 });
