@@ -15,7 +15,8 @@ describe("User DAO Tests", function() {
                 // it will be needed for database destruction and setting up
                 // the DAOFactory
                 pgpObj = res;
-                users = DAOFactory(pgpObj.db).users;
+                this.daos = DAOFactory(pgpObj.db);
+                users = this.daos.users;
                 done();
         })
         .catch((err) => console.log(err) || process.exit(1) );
@@ -122,5 +123,39 @@ describe("User DAO Tests", function() {
             })
             .catch((err) => done.fail(err))
     });
+
+    it("it should return the type of user a user is (ngo)", function(done) {
+        var userId;
+        users.createUser(username, password, email)
+            .then((data) => {
+                userId = data.id;
+                return pgpObj.db.none("INSERT INTO ngo (user_id, organization) VALUES ($1, 'organization')", [userId]);
+            })
+            .then(() => {
+                return users.getUserType(userId);
+            })
+            .then((data) => {
+                expect(data.user_type).toEqual('ngo');
+                done();
+            })
+            .catch((err) => done.fail(err))
+    });
+
+    it("it should return the type of user a user is (refugee)", function(done) {
+        var userId;
+        users.createUser(username, password, email)
+            .then((data) => {
+                userId = data.id;
+                return pgpObj.db.none("INSERT INTO refugee (user_id, name) VALUES ($1, 'name')", [userId]);
+            })
+            .then(() => {
+                return users.getUserType(userId);
+            })
+            .then((data) => {
+                expect(data.user_type).toEqual('refugee');
+                done();
+            })
+            .catch((err) => done.fail(err))
+    })
 
 });
