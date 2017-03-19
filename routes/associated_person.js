@@ -34,10 +34,8 @@ router.post('/', (req, res, next) => {
         })
         .then(() => {
             // pass refugee id to addAssociatedMember
-            return users.addAssociatedMember(refugeeID,associated_name)
-        })
-        .then((data) => {
-             res.redirect('/refugee_dashboard?status=1');
+            users.addAssociatedMember(refugeeID,associated_name)
+            res.redirect('/refugee_dashboard?status=1');
         })
         .catch((err) => {
              var error = new Error(err);
