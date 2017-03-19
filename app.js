@@ -43,6 +43,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session(sessionConfig));
 
+app.use(function(req, res, next) {
+  res.locals.isLoggedIn = req.session.isLoggedIn;
+  next();
+});
 app.use('/', index);
 app.use('/users', users);
 app.use('/auth', auth);
