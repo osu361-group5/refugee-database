@@ -6,7 +6,7 @@ const defaultDB = 'postgres';
 const dbUtils = require('../../db/util');
 const config = require('../../config');
 
-var db, pgp, testPGP, testDB;
+var db, pgp, testPGPCreated, testPGP, testDB;
 
 /**
  * Singleton that makes a connection with the database
@@ -89,8 +89,11 @@ function getTestDatabase({
     dbUser,
     dbHost}) {
     var connectionString = `postgres://${dbUser}:${dbPass}@${dbHost}:${dbPort}/${dbDatabase}`;
+    var options = {
+        noWarnings: true
+    };
     if (!testPGP) {
-        testPGP = require('pg-promise')();
+        testPGP = require('pg-promise')(options);
         testDB = testPGP(connectionString)
     }
     return {pgp: testPGP, db: testDB};

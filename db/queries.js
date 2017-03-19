@@ -130,7 +130,31 @@ class UserDAO {
                 .catch((err) => reject(err))
         });
     }
-        
+
+    /**
+     *
+     * @param userId
+     * @returns {Promise} that resolves to either refugee or ngo depending on usertype
+     */
+    getUserType(userId) {
+        return new Promise((resolve, reject) => {
+            this.db.oneOrNone(`
+            SELECT id, case
+                WHEN id IN (SELECT user_id from refugee) THEN 'refugee'
+                WHEN id in (SELECT user_id from ngo) THEN 'ngo'
+                ELSE null
+                END
+                AS user_type
+                FROM user_m
+                WHERE user_m.id = $1`, [userId])
+                .then((data) => {
+                    if (data == null) reject('user does not exist');
+                    resolve(data);
+                })
+                .catch((err) => reject(err));
+        });
+    }
+
 }
 
 class RefugeeDAO {

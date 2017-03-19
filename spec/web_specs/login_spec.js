@@ -13,9 +13,41 @@ function makeJoiner(baseUrl) {
     }
 }
 
+
 describe("Login Tests", function() {
     var pgpObj;
     var getAbsUrl = makeJoiner(baseUrl);
+    var self = this;
+
+    /**
+     * helper function to create a user and log them in
+     * @param username
+     * @param password
+     * @param email
+     * @returns {Promise.<TResult>}
+     */
+    function createUserAndLogin(username, password, email, userType) {
+        return this.users.createUser(username, password, email)
+            .then(() => {
+                return new Promise((resolve, reject) =>
+                {
+                    var reqObj = {
+                        url: getAbsUrl('/auth/login'),
+                        form: {
+                            username: username,
+                            password: password
+                        }
+                    };
+                    request.post(reqObj, function (error, response, body) {
+                        if (error) reject(error);
+                        resolve()
+                    })
+                })
+            })
+            .catch((err) => {
+                return done.fail(err);
+            });
+    }
 
     beforeEach(function(done) {
         testUtils.beforeTest(process.env.dbDatabase, process.env.dbHost)
@@ -23,7 +55,8 @@ describe("Login Tests", function() {
                 pgpObj = res;
                 this.server = testApp(3001);
                 this.server.start();
-                this.users = queries(pgpObj.db).users;
+                this.daos = queries(pgpObj.db);
+                this.users = this.daos.users;
                 done();
             })
             .catch((err) => process.exit(1))
@@ -85,10 +118,102 @@ describe("Login Tests", function() {
 
             request.post(reqObj, function(error, response, body) {
                 if (error) done.fail(error);
-                expect(response.statusCode).toEqual(404);
+                expect(response.statusCode).toEqual(403);
+                expect(body).toContain("Login");
+                expect(body).toContain("<form");
                 done();
             });
+        });
+    });
 
+    describe('POST /auth/logout', function() {
+        it('should logout a logged-in user', function(done) {
+            var username = 'actualuser';
+            var password = 'test';
+            var email = 'test@e.com';
+
+            createUserAndLogin.bind(this)(username, email, password, "refugee")
+                .then(() => {
+                    var postReq = {
+                        url: getAbsUrl('/auth/logout'),
+                        followAllRedirects: true
+                    };
+                    request.post(postReq, function(error, response, body) {
+                        if (error) done.fail(error);
+                        expect(response.statusCode).toBe(200);
+                        expect(body).toContain("Login");
+                        expect(body).toContain("<form");
+                        done();
+                    });
+                })
+                .catch((err) => done.fail(err));
+        });
+
+        it('should redirect to login if you are not logged in and display error', function(done) {
+            var postReq = {
+                url: getAbsUrl('/auth/logout'),
+                followAllRedirects: true,
+                jar: true   // remember cookie for session
+            };
+            request.post(postReq, function(error, response, body) {
+                if (error) done.fail(error);
+                expect(response.statusCode).toBe(200);
+                expect(body).toContain("Must be logged-in to do that");
+                done();
+            });
+        });
+
+        it("should redirect to ngo dashboard if usertype is ngo", function(done) {
+            var postReq = {
+                url: getAbsUrl('/auth/login'),
+                followAllRedirects: true,
+                jar: true,
+                form: {
+                    username: 'test123',
+                    password: 'test'
+                }
+            };
+
+            var {username, password} = postReq.form;
+            var organization = 'organization';
+            this.users.createUser(username, password, username+'@email.com')
+                .then((data) => {
+                    return this.daos.ngo.create(data.id, organization)
+                })
+                .then(() => {
+                    request.post(postReq, function (error, response, body) {
+                        if (error) done.fail(error);
+                        expect(body).toContain("<legend>View All Refugees</legend>");
+                        done();
+                    });
+                })
+                .catch((err) => done.fail(err));
+        });
+
+        it("should redirect to refugee dashboard if usertype is refugee", function(done) {
+            var postReq = {
+                url: getAbsUrl('/auth/login'),
+                followAllRedirects: true,
+                jar: true,
+                form: {
+                    username: 'test123',
+                    password: 'test'
+                }
+            };
+            var {username, password} = postReq.form;
+            var name = 'someref';
+            this.users.createUser(username, password, username + '@email.com')
+                .then((data) => {
+                    return this.daos.refugees.create(data.id, name);
+                })
+                .then(() => {
+                    request.post(postReq, function(error, response, body) {
+                        if (error) done.fail(error);
+                        expect(body).toContain("<h1>Refugee Dashboard</h1>")
+                        done();
+                    })
+                })
+                .catch(err => done.fail(err));
 
         });
     });
