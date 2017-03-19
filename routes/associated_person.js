@@ -24,39 +24,28 @@ router.post('/', (req, res, next) => {
             console.log('find by id stuff indside' + userID);
 
             // get refugee id from user id
-            refugees.findByUserId(userID)
-                .then((data) => {
-                    var refugeeID = data.id;
-                    console.log('find refugee by id ' + refugeeID);
+            return refugees.findByUserId(userID)
+        })
+        .then((data) => {
+            var refugeeID = data.id;
+            console.log('find refugee by id ' + refugeeID);
 
-                    users.addAssociatedMember(refugeeID,associated_name)
-                        .then((data) => {
-                        res.redirect('/refugee_dashboard?status=1');
-                    })
-                    .catch((err) => {
-                        var error = new Error(err);
-                    // user does not exist
-                    next(error);
-                    });
-            });
-    });
-
-    // get refugee id from user id
-
-    // pass refugee id to addAssociatedMember
-
-
-
-
+            // pass refugee id to addAssociatedMember
+            return users.addAssociatedMember(refugeeID,associated_name)
+        })
+        .then((data) => {
+             res.redirect('/refugee_dashboard?status=1');
+        })
+        .catch((err) => {
+             var error = new Error(err);
+             // user does not exist
+             next(error);
+        });
 });
 
 router.get('/', (req, res, next) => {
   //users.createUser('igor','pwd','email');
   res.render('add_family', { title: 'Add Associated Member' });
 });
-
-
-
-
 
 module.exports = router;
