@@ -1,16 +1,19 @@
 <h1>User Registration</h1>
-
+{{#if error}}
+<h2>{{error}}</h2>
+{{/if}}
 <form action="/register" method="post">
     <fieldset>
 		<legend>Create a new user</legend>
 		<div class = "field">User Type
-			<select name="refugeeType">
+			<select id="user-type" name="user-type">
+                <option value="default">Select a type</option>
 				<option value="refugee">Refugee</option>
 				<option value="ngo">NGO</option>
 			</select>
 		</div>
 		<div>
-		  <label for='username'>Full Name:</label>
+		  <label for='username'>Username:</label>
 		  <input type="text" name="username">
 		</div>
 		<div>
@@ -21,6 +24,34 @@
 		  <label for='password'>Password:</label>
 		  <input type="password" name="password">
 		</div>
+        <div id="refugee-name" style="display:none;">
+            <label for="refugee-name">Name</label>
+            <input type="text" name="refugee-name">
+        </div>
+        <div id="org" style="display:none;">
+            <label for="org">Organization</label>
+            <input type="text" name="org">
+        </div>
+
 		<input type="submit" value="Submit">
     </fieldset>	
 </form>
+
+<script>
+    function renderRemainingForm(event) {
+        var elem = document.querySelector("#user-type option[value=default]");
+        if (elem) {
+            event.target.removeChild(elem);
+        }
+        var selected = event.target.value;
+            if (selected === "refugee") {
+                document.getElementById("refugee-name").style.display = "block";
+                document.getElementById("org").style.display = "none";
+            } else {
+                document.getElementById("org").style.display = "block";
+                document.getElementById("refugee-name").style.display = "none";
+            }
+    }
+
+    document.getElementById("user-type").addEventListener("change",renderRemainingForm,false);
+</script>
