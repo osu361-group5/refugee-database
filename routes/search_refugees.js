@@ -4,7 +4,7 @@ var db = require('../db');
 var ngo = require('../db/queries')(db).ngo;
 
 router.get('/', function(req, res, next) {
-	ngo.findRefugeeAssociatedWithNGOByName(req.session.userId,req.query.refugee_name)
+	ngo.searchForRefugee(req.session.userId,req.query.refugee_name)
 		.then((data)=> {
                         console.log(data[0]);
 			console.log(req.query.refugee_name);
