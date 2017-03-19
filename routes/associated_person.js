@@ -16,20 +16,23 @@ router.post('/', (req, res, next) => {
 
     var {associated_name} = req.body;
     var user_session_id = req.session.userId;
+    var userID, refugeeID;
 
     // get user id from username
     users.findById(user_session_id)
         .then((data) => {
-            var userID = data.id
+            userID = data.id
             console.log('find by id stuff indside' + userID);
-
+        })
+        .then(() => {
             // get refugee id from user id
             return refugees.findByUserId(userID)
         })
         .then((data) => {
             var refugeeID = data.id;
             console.log('find refugee by id ' + refugeeID);
-
+        })
+        .then(() => {
             // pass refugee id to addAssociatedMember
             return users.addAssociatedMember(refugeeID,associated_name)
         })
